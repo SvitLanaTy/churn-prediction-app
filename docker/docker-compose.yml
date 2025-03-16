@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      .
+      #context: .. # Build context is the parent directory (churn-prediction-app/)
+      #dockerfile: docker/Dockerfile # Location of the Dockerfile inside the 'docker/' folder
+
+    container_name: data_science_app
+    ports:
+      - "8888:8888" # Map port 8888 from container to host
+
+    volumes:
+      - ..:/app # Mount the entire project directory (parent) into /app inside the container
+
+    environment:
+      - JUPYTER_TOKEN=passw0rd # Set Jupyter Notebook token
+
+    command: [
+        "jupyter",
+        "notebook",
+        "--ip=0.0.0.0", # Allow access from any IP
+        "--port=8888", # Run Jupyter on port 8888
+        "--no-browser", # Prevent Jupyter from auto-opening a browser
+        "--allow-root", # Allow Jupyter to run as root
+      ]
