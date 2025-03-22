@@ -16,10 +16,14 @@ RUN mkdir -p docker
 # Install dependencies
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install jupyter  # Explicitly install Jupyter
 
-# Expose port for Jupyter Notebook
-EXPOSE 8888
+# Install required Python packages
+RUN pip install --no-cache-dir \
+    jupyter \
+    streamlit 
 
-# Run Jupyter Notebook
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# Expose the necessary ports
+EXPOSE 8888 8501
+
+# Start both services
+CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & streamlit run app.py --server.port 8501 --server.address 0.0.0.0"]
