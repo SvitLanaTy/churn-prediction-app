@@ -110,7 +110,7 @@ with st.sidebar:
 @st.cache_resource
 def load_model():
     # Check if model exists, for this demo we'll create a simple placeholder
-    if not os.path.exists('models/churn_model.pkl'):
+    if not os.path.exists('models/xgboost_model.pkl'):
         # Create models directory if it doesn't exist
         os.makedirs('models', exist_ok=True)
         
@@ -118,11 +118,11 @@ def load_model():
         model = RandomForestClassifier(n_estimators=100, random_state=42)
         
         # Save placeholder model
-        with open('models/churn_model.pkl', 'wb') as f:
+        with open('models/xgboost_model.pkl', 'wb') as f:
             pickle.dump(model, f)
     
     # Load model
-    with open('models/churn_model.pkl', 'rb') as f:
+    with open('models/xgboost_model.pkl', 'rb') as f:
         model = pickle.load(f)
     
     return model

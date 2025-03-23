@@ -8,6 +8,7 @@ The **Churn Prediction App** is a machine-learning-powered web application desig
 
 ```
 churn-prediction-app/
+
 │-- .git/                 # Git repository (hidden)
 │-- data/                 # Data storage directory
 │-- docker/               # Docker configuration files
@@ -16,7 +17,6 @@ churn-prediction-app/
 │-- app.py                # Main application script
 │-- README.md             # Project overview and instructions
 │-- .gitignore            # Git ignore rules
-│-- docker-compose.yml    # Docker Compose configuration file
 
 ```
 
@@ -32,7 +32,7 @@ churn-prediction-app/
    ```sh
    docker-compose -f docker-compose.yml up --build
    ```
-3. The password for accessing Jupyter Notebook is stored in the YAML file.
+3. requirements.txt file is located in docker directory
 
 ## Application Components
 
@@ -48,13 +48,13 @@ The main application script is built using **Streamlit**. Key functionalities in
 #### Features:
 
 - **Customer Data Input:** Users can input service usage details, contract length, and service failures.
-- **Prediction Model:** A trained RandomForestClassifier model (stored in `models/churn_model.pkl`) is used for prediction.
+- **Prediction Model:** A trained RandomForestClassifier model (stored in `models/xgboost_model.pkl`) is used for prediction.
 - **Visualization:** Displays churn probability, contributing factors, and analytics on customer churn.
 - **Recommendations:** Provides insights on reducing customer churn risk.
 
 ### 2. `models/`
 
-- Stores the trained machine learning model (`churn_model.pkl`).
+- Stores the trained machine learning model (`xgboost_model.pkl`).
 - If the model is missing, the script initializes a placeholder model.
 
 ### 3. `data/`
@@ -78,6 +78,3 @@ The main application script is built using **Streamlit**. Key functionalities in
 3. **Run the prediction** to check churn probability.
 4. **View recommendations** to retain at-risk customers.
 5. **Analyze trends** using the provided analytics dashboard.
-
-
-
