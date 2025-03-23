@@ -1,0 +1,37 @@
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore virtual environment and Python cache
+venv/
+__pycache__/
+*.pyc
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore environment variables and sensitive data
+.env
+.env.local
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info
+
+# Ignore temporary files
+
+# Ignore data files
+data/
+*.csv
+*.db
+
+
+
+# Ignore Dockerfile (optional)
+Dockerfile
