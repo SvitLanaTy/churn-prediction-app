@@ -48,7 +48,7 @@ The main application script is built using **Streamlit**. Key functionalities in
 #### Features:
 
 - **Customer Data Input:** Users can input service usage details, contract length, and service failures.
-- **Prediction Model:** A trained RandomForestClassifier model (stored in `models/xgboost_model.pkl`) is used for prediction.
+- **Prediction Model:** A trained XGBoost model (stored in `models/xgboost_model.pkl`) is used for prediction.
 - **Visualization:** Displays churn probability, contributing factors, and analytics on customer churn.
 - **Recommendations:** Provides insights on reducing customer churn risk.
 
