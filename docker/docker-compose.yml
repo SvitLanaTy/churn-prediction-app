@@ -9,19 +9,12 @@ services:
 
     container_name: data_science_app
     ports:
-      - "8888:8888" # Map port 8888 from container to host
-
+      - "49152:8888" # Jupyter Notebook
+      - "49153:8501" # Streamlit
     volumes:
-      - ..:/app # Mount the entire project directory (parent) into /app inside the container
-
+      - ..:/app
     environment:
-      - JUPYTER_TOKEN=passw0rd # Set Jupyter Notebook token
-
-    command: [
-        "jupyter",
-        "notebook",
-        "--ip=0.0.0.0", # Allow access from any IP
-        "--port=8888", # Run Jupyter on port 8888
-        "--no-browser", # Prevent Jupyter from auto-opening a browser
-        "--allow-root", # Allow Jupyter to run as root
-      ]
+      - JUPYTER_TOKEN=passw0rd
+    command: >
+      sh -c "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root &
+             streamlit run app.py --server.port 8501 --server.address 0.0.0.0"
