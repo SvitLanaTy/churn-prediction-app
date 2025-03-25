@@ -175,23 +175,23 @@ with tab1:
         st.subheader("Services")
         is_tv_subscriber = st.checkbox("TV Subscription", value=False)
         is_movie_package_subscriber = st.checkbox("Movie Package Subscription", value=False)
-        subscription_age = st.slider("Subscription Age (years)", min_value=0.0, max_value=12.0, value=0.5, step=0.01)
+        subscription_age = st.slider("Subscription Age (years)", min_value=0.0, max_value=24.0, value=0.5, step=0.01)
         st.markdown("</div>", unsafe_allow_html=True)
     
     with col2:
         st.markdown("<div class='feature-section'>", unsafe_allow_html=True)
         st.subheader("Usage")
-        bill_avg = st.slider("Average Bill (last 3 months)", min_value=0, max_value=400, value=50)
-        download_avg = st.slider("Average Download Speed (GB, last 3 months)", min_value=0.0, max_value=500.0, value=150.0, step=1.0)
-        upload_avg = st.slider("Average Upload Speed (GB, last 3 months)", min_value=0.0, max_value=50.0, value=10.0, step=0.1)
-        download_over_limit = st.slider("Download Over Limit Count (last 9 months)", min_value=0, max_value=7, value=0)
+        is_download_over_limit = st.checkbox("Download Over Limit", value=False)
+        bill_avg = st.slider("Average Bill (last 3 months)", min_value=0, max_value=800, value=50)
+        download_avg = st.slider("Average Download Speed (GB, last 3 months)", min_value=0.0, max_value=1000.0, value=150.0, step=1.0)
+        upload_avg = st.slider("Average Upload Speed (GB, last 3 months)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
         st.markdown("</div>", unsafe_allow_html=True)
     
     with col3:
         st.markdown("<div class='feature-section'>", unsafe_allow_html=True)
         st.subheader("Contract & Service")
-        remaining_contract = st.slider("Remaining Contract (years)", min_value=0.0, max_value=3.0, value=1.0, step=0.01)
-        service_failure_count = st.slider("Service Failure Count", min_value=0, max_value=19, value=0)
+        remaining_contract = st.slider("Remaining Contract (years)", min_value=0.0, max_value=6.0, value=1.0, step=0.01)
+        service_failure_count = st.slider("Service Failure Count", min_value=0, max_value=38, value=0)
         st.markdown("</div>", unsafe_allow_html=True)
     
     # Prediction button
@@ -210,7 +210,7 @@ with tab1:
                 'service_failure_count': service_failure_count,
                 'download_avg': download_avg,
                 'upload_avg': upload_avg,
-                'download_over_limit': download_over_limit
+                'download_over_limit': 1 if is_download_over_limit else 0
             }
             
             # Create DataFrame with the same structure as training data
@@ -323,7 +323,16 @@ with tab2:
     
     st.markdown("""
     Upload a CSV file with customer data to predict churn for multiple customers at once. 
-    The file should contain the same features as shown in the Individual Prediction tab.
+    The file should contain the following columns:
+    - `is_tv_subscriber`: 0 or 1
+    - `is_movie_package_subscriber`: 0 or 1
+    - `subscription_age`: Years (0-24)
+    - `bill_avg`: Amount (0-800)
+    - `reamining_contract`: Years (0-6)
+    - `service_failure_count`: Count (0-38)
+    - `download_avg`: GB (0-1000)
+    - `upload_avg`: GB (0-100)
+    - `download_over_limit`: 0 or 1
     """)
     
     # File uploader
