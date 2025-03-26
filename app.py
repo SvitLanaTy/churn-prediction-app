@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import joblib
 import os
 import numpy as np
 import plotly.express as px
@@ -131,8 +132,7 @@ def load_model():
         # Load model
         model_path = 'models/xgboost_model.pkl'
         if os.path.exists(model_path):
-            with open(model_path, 'rb') as f:
-                model = pickle.load(f)
+            model = joblib.load(model_path)
             return model
         else:
             st.error(f"Model file not found: {model_path}")
@@ -147,8 +147,7 @@ def load_scaler():
     try:
         scaler_path = 'data/scaler.pkl'
         if os.path.exists(scaler_path):
-            with open(scaler_path, 'rb') as f:
-                scaler = pickle.load(f)
+            scaler = joblib.load(scaler_path)
             return scaler
         else:
             st.warning(f"Scaler file not found: {scaler_path}. Using default scaler.")
