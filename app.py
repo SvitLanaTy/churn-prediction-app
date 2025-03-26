@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import joblib
 import os
 import numpy as np
 import plotly.express as px
@@ -131,8 +132,7 @@ def load_model():
         # Load model
         model_path = 'models/xgboost_model.pkl'
         if os.path.exists(model_path):
-            with open(model_path, 'rb') as f:
-                model = pickle.load(f)
+            model = joblib.load(model_path)
             return model
         else:
             st.error(f"Model file not found: {model_path}")
@@ -147,8 +147,7 @@ def load_scaler():
     try:
         scaler_path = 'data/scaler.pkl'
         if os.path.exists(scaler_path):
-            with open(scaler_path, 'rb') as f:
-                scaler = pickle.load(f)
+            scaler = joblib.load(scaler_path)
             return scaler
         else:
             st.warning(f"Scaler file not found: {scaler_path}. Using default scaler.")
@@ -217,8 +216,17 @@ with tab1:
             input_df = pd.DataFrame([features])
             
             try:
+                # Scale the features using the loaded scaler
+                numeric_features = ['subscription_age', 'bill_avg', 'reamining_contract', 
+                                   'service_failure_count', 'download_avg', 'upload_avg']
+                input_df_scaled = input_df.copy()
+                
+                # Only scale numeric features if scaler is available
+                if scaler is not None:
+                    input_df_scaled[numeric_features] = scaler.transform(input_df[numeric_features])
+                
                 # Make prediction
-                probability = model.predict_proba(input_df)[0][1]
+                probability = model.predict_proba(input_df_scaled)[0][1]
                 prediction = 1 if probability > 0.5 else 0
                 
                 # Display prediction results in a nice card
@@ -362,57 +370,62 @@ with tab2:
                 # Make predictions button
                 if st.button("Generate Predictions", type="primary"):
                     if model:
+                        # Get only the required columns
+                        X = df[required_columns]
+                        
+                        # Scale numeric features
+                        numeric_features = ['subscription_age', 'bill_avg', 'reamining_contract', 
+                                          'service_failure_count', 'download_avg', 'upload_avg']
+                        X_scaled = X.copy()
+                        
+                        # Only scale numeric features if scaler is available
+                        if scaler is not None:
+                            X_scaled[numeric_features] = scaler.transform(X[numeric_features])
+                        
                         # Make predictions
-                        try:
-                            # Get only the required columns
-                            X = df[required_columns]
-                            
-                            # Make predictions
-                            df['churn_probability'] = model.predict_proba(X)[:, 1]
-                            df['predicted_churn'] = (df['churn_probability'] > 0.5).astype(int)
-                            
-                            # Display results
-                            st.subheader("Prediction Results")
-                            
-                            # Summary statistics
-                            churn_count = df['predicted_churn'].sum()
-                            total_customers = len(df)
-                            churn_rate = churn_count / total_customers * 100
-                            
-                            col1, col2, col3 = st.columns(3)
-                            with col1:
-                                st.metric("Total Customers", f"{total_customers}")
-                            with col2:
-                                st.metric("Predicted to Churn", f"{churn_count}")
-                            with col3:
-                                st.metric("Churn Rate", f"{churn_rate:.2f}%")
-                            
-                            # Show the results table
-                            st.dataframe(df)
-                            
-                            # Download link for the results
-                            csv = df.to_csv(index=False)
-                            st.download_button(
-                                label="Download Results as CSV",
-                                data=csv,
-                                file_name="churn_predictions.csv",
-                                mime="text/csv",
-                            )
-                            
-                            # Visualization
-                            st.subheader("Churn Probability Distribution")
-                            fig = px.histogram(
-                                df, 
-                                x='churn_probability', 
-                                nbins=20,
-                                labels={'churn_probability': 'Churn Probability'},
-                                title='Distribution of Churn Probabilities',
-                                color_discrete_sequence=['#1E88E5']
-                            )
-                            st.plotly_chart(fig, use_container_width=True)
-                            
-                        except Exception as e:
-                            st.error(f"Error generating predictions: {e}")
+                        df['churn_probability'] = model.predict_proba(X_scaled)[:, 1]
+                        df['predicted_churn'] = (df['churn_probability'] > 0.5).astype(int)
+                        
+                        # Display results
+                        st.subheader("Prediction Results")
+                        
+                        # Summary statistics
+                        churn_count = df['predicted_churn'].sum()
+                        total_customers = len(df)
+                        churn_rate = churn_count / total_customers * 100
+                        
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Total Customers", f"{total_customers}")
+                        with col2:
+                            st.metric("Predicted to Churn", f"{churn_count}")
+                        with col3:
+                            st.metric("Churn Rate", f"{churn_rate:.2f}%")
+                        
+                        # Show the results table
+                        st.dataframe(df)
+                        
+                        # Download link for the results
+                        csv = df.to_csv(index=False)
+                        st.download_button(
+                            label="Download Results as CSV",
+                            data=csv,
+                            file_name="churn_predictions.csv",
+                            mime="text/csv",
+                        )
+                        
+                        # Visualization
+                        st.subheader("Churn Probability Distribution")
+                        fig = px.histogram(
+                            df, 
+                            x='churn_probability', 
+                            nbins=20,
+                            labels={'churn_probability': 'Churn Probability'},
+                            title='Distribution of Churn Probabilities',
+                            color_discrete_sequence=['#1E88E5']
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                        
                     else:
                         st.error("Model not loaded. Please check if the model file exists and is valid.")
         except Exception as e:
