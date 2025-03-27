@@ -57,11 +57,11 @@ The main application script is built using **Streamlit**. Key functionalities in
 ### 2. `models/`
 
 - Stores the trained machine learning model (`xgboost_model.pkl`).
-- If the model is missing, the script initializes a placeholder model.
 
 ### 3. `data/`
 
 - Contains customer data (`internet_service_churn.csv`) used for analytics.
+- Data is used for visualizing trends in customer churn.
 
 ### 4. `notebooks/`
 
