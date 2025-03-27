@@ -8,7 +8,6 @@ The **Churn Prediction App** is a machine-learning-powered web application desig
 
 ```
 churn-prediction-app/
-
 │-- .git/                 # Git repository (hidden)
 │-- data/                 # Data storage directory
 │-- docker/               # Docker configuration files
@@ -32,7 +31,10 @@ churn-prediction-app/
    ```sh
    docker-compose -f docker-compose.yml up --build
    ```
-3. requirements.txt file is located in docker directory
+3. After a successful launch, the application will be available at the address:
+   ```sh
+   http://localhost:49153
+   ```
 
 ## Application Components
 
@@ -60,7 +62,6 @@ The main application script is built using **Streamlit**. Key functionalities in
 ### 3. `data/`
 
 - Contains customer data (`internet_service_churn.csv`) used for analytics.
-- Data is used for visualizing trends in customer churn.
 
 ### 4. `notebooks/`
 
@@ -70,6 +71,29 @@ The main application script is built using **Streamlit**. Key functionalities in
 
 - Contains Docker-related configuration files to containerize and deploy the application.
 - `docker-compose.yml` defines the services for running the app in a Docker container.
+
+## Model Performance Metrics
+
+Three machine learning models were trained and compared. The best-performing model (XGBoost) was selected for deployment.
+
+### Model Comparison:
+
+| Model              | Accuracy | Recall   | Precision | F1-score | Mean CV Accuracy |
+| ------------------ | -------- | -------- | --------- | -------- | ---------------- |
+| CatBoost           | 0.936991 | 0.936012 | 0.950869  | 0.943382 | 0.938276         |
+| XGBoost            | 0.938521 | 0.935764 | 0.953741  | 0.944667 | 0.941214         |
+| LogisticRegression | 0.874957 | 0.922495 | 0.863795  | 0.892180 | 0.870692         |
+
+### Best Model (XGBoost) Performance:
+
+| Metric           | Score    |
+| ---------------- | -------- |
+| Accuracy         | 0.938521 |
+| Recall           | 0.935764 |
+| Precision        | 0.953741 |
+| F1-score         | 0.944667 |
+| Mean CV Accuracy | 0.941214 |
+| Overall Score    | 0.942782 |
 
 ## Usage
 
